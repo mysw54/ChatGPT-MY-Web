@@ -12,12 +12,14 @@ export async function requestOpenai(req: NextRequest) {
     "/api/openai/",
     "",
   );
+  const clonedBody = await req.text();
+  const jsonBody = JSON.parse(clonedBody) as { model?: string };
   
   let baseUrl = serverConfig.baseUrl;
   let authValue = "";
-  const jsonBody1 = JSON.parse(req.body);
-  console.log("[get] ", jsonBody1);
-  if ((jsonBody1?.model ?? "").includes("gpt-4")) {
+  //const jsonBody1 = JSON.parse(req.body);
+  console.log("[get] ", jsonBody);
+  if ((jsonBody?.model ?? "").includes("gpt-4")) {
     baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl;
     authValue = serverConfig.apiKey40 ?? serverConfig.apiKey;
   }
@@ -57,7 +59,7 @@ export async function requestOpenai(req: NextRequest) {
       }),
     },
     method: req.method,
-    body: req.body,
+    body: clonedBody,
     // to fix #2485: https://stackoverflow.com/questions/55920957/cloudflare-worker-typeerror-one-time-use-body
     redirect: "manual",
     // @ts-ignore
@@ -72,10 +74,7 @@ export async function requestOpenai(req: NextRequest) {
         DEFAULT_MODELS,
         serverConfig.customModels,
       );
-      const clonedBody = await req.text();
-      fetchOptions.body = clonedBody;
-
-      const jsonBody = JSON.parse(clonedBody) as { model?: string };
+      
 
       // not undefined and is false
       if (modelTable[jsonBody?.model ?? ""] === false) {
