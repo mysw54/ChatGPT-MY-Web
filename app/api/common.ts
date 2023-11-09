@@ -7,7 +7,6 @@ const serverConfig = getServerSideConfig();
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
-  //const authValue = req.headers.get("Authorization") ?? "";
   const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
     "/api/openai/",
     "",
@@ -15,8 +14,8 @@ export async function requestOpenai(req: NextRequest) {
   const clonedBody = await req.text();
   const jsonBody = JSON.parse(clonedBody) as { model?: string };
   
-  var baseUrl = serverConfig.baseUrl;
-  var authValue = serverConfig.apiKey;
+  let baseUrl = serverConfig.baseUrl;
+  let authValue = serverConfig.apiKey;
   //const jsonBody1 = JSON.parse(req.body);
   console.log("[get] ", jsonBody);
   if ((jsonBody?.model ?? "").includes("gpt-4")) {
@@ -27,7 +26,7 @@ export async function requestOpenai(req: NextRequest) {
     baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl;
     authValue = serverConfig.apiKey35 ?? serverConfig.apiKey;
   }
-  baseUrl = baseUrl ?? OPENAI_BASE_URL;
+  
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;
@@ -53,7 +52,7 @@ export async function requestOpenai(req: NextRequest) {
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
-      "Authorization": authValue,
+      Authorization: authValue,
       ...(process.env.OPENAI_ORG_ID && {
         "OpenAI-Organization": process.env.OPENAI_ORG_ID,
       }),
