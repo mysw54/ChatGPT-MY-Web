@@ -16,21 +16,35 @@ export async function requestOpenai(req: NextRequest) {
   
   let baseUrl = "";
   let authValue = "";
-  const clonedBody1 = await req.text();
+  //const clonedBody1 = await req.text();
   try {
 
-    const jsonBody1 = JSON.parse(clonedBody1);
-    console.log("[get] ", jsonBody1);
-    if ((jsonBody1?.model ?? "").includes("gpt-4")) {
-        baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl ?? "";
+    //const jsonBody1 = JSON.parse(clonedBody1);
+    console.log("[get] ", jsonBody);
+    if ((jsonBody?.model ?? "").includes("gpt-4")) {
+        baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl ?? OPENAI_BASE_URL;
         
         authValue = serverConfig.apiKey40 ?? serverConfig.apiKey ?? "";
     }
     else {
-        baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl ?? "";
+        baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl ?? OPENAI_BASE_URL;
+        
         authValue = serverConfig.apiKey35 ?? serverConfig.apiKey ?? "";
     }
 
+	if (baseUrl == "" ) {
+      return {
+        error: true,
+        msg: "empty baseUrl" ,
+      }
+    }
+    if (baseUrl == "" ) {
+      return {
+        error: true,
+        msg: "empty API Key" ,
+      }
+    }
+    
     if (!baseUrl.startsWith("http")) {
       baseUrl = `https://${baseUrl}`;
     }
@@ -96,7 +110,7 @@ export async function requestOpenai(req: NextRequest) {
     duplex: "half",
     signal: controller.signal,
   };
-  fetchOptions.body = clonedBody1;
+  fetchOptions.body = clonedBody;
   // #1815 try to refuse gpt4 request
   if (serverConfig.customModels && req.body) {
     try {
