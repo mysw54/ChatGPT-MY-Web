@@ -14,6 +14,36 @@ export async function requestOpenai(req: NextRequest) {
   const clonedBody = await req.text();
   const jsonBody = JSON.parse(clonedBody);
   
+  let baseUrl = "";
+  let authValue = "";
+  const clonedBody1 = await req.text();
+  try {
+
+    const jsonBody1 = JSON.parse(clonedBody1);
+    console.log("[get] ", jsonBody1);
+    if ((jsonBody1?.model ?? "").includes("gpt-4")) {
+        baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl;
+        authValue = serverConfig.apiKey40 ?? serverConfig.apiKey;
+    }
+    else {
+        baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl;
+        authValue = serverConfig.apiKey35 ?? serverConfig.apiKey;
+    }
+
+    if (!baseUrl.startsWith("http")) {
+      baseUrl = `https://${baseUrl}`;
+    }
+
+    if (baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+
+
+  } catch (e) {
+    console.error("gpt4 filter", e);
+  }
+    
+  /*
   let baseUrl = serverConfig.baseUrl;
   let authValue = serverConfig.apiKey;
   //const jsonBody1 = JSON.parse(req.body);
@@ -35,7 +65,7 @@ export async function requestOpenai(req: NextRequest) {
   if (baseUrl.endsWith("/")) {
     baseUrl = baseUrl.slice(0, -1);
   }
-
+  */
   console.log("[Proxy] ", openaiPath);
   console.log("[Base Url]", baseUrl);
   console.log("[Org ID]", serverConfig.openaiOrgId);
@@ -65,7 +95,7 @@ export async function requestOpenai(req: NextRequest) {
     duplex: "half",
     signal: controller.signal,
   };
-
+  fetchOptions.body = clonedBody1;
   // #1815 try to refuse gpt4 request
   if (serverConfig.customModels && req.body) {
     try {
