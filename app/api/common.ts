@@ -12,7 +12,7 @@ export async function requestOpenai(req: NextRequest) {
     "",
   );
   const clonedBody = await req.text();
-  const jsonBody = JSON.parse(clonedBody) as { model?: string };
+  const jsonBody = JSON.parse(clonedBody);
   
   let baseUrl = serverConfig.baseUrl;
   let authValue = serverConfig.apiKey;
