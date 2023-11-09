@@ -15,7 +15,7 @@ export async function requestOpenai(req: NextRequest) {
   
   let baseUrl = serverConfig.baseUrl;
   let authValue = "";
-  const jsonBody1 = JSON.parse(req.boay);
+  const jsonBody1 = JSON.parse(req.body);
   console.log("[get] ", jsonBody1);
   if ((jsonBody1?.model ?? "").includes("gpt-4")) {
     baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl;
