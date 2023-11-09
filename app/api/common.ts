@@ -50,10 +50,10 @@ export async function requestOpenai(req: NextRequest) {
 
   const fetchUrl = `${baseUrl}/${openaiPath}`;
   const fetchOptions: RequestInit = {
-    headers: {
+    "headers": {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
-      Authorization: authValue,
+      "Authorization": authValue,
       ...(process.env.OPENAI_ORG_ID && {
         "OpenAI-Organization": process.env.OPENAI_ORG_ID,
       }),
