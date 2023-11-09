@@ -32,19 +32,7 @@ export async function requestOpenai(req: NextRequest) {
         authValue = serverConfig.apiKey35 ?? serverConfig.apiKey ?? "";
     }
 
-	if (baseUrl == "" ) {
-      return {
-        error: true,
-        msg: "empty baseUrl" ,
-      }
-    }
-    if (baseUrl == "" ) {
-      return {
-        error: true,
-        msg: "empty API Key" ,
-      }
-    }
-    
+	   
     if (!baseUrl.startsWith("http")) {
       baseUrl = `https://${baseUrl}`;
     }
