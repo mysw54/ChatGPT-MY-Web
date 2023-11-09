@@ -22,12 +22,13 @@ export async function requestOpenai(req: NextRequest) {
     const jsonBody1 = JSON.parse(clonedBody1);
     console.log("[get] ", jsonBody1);
     if ((jsonBody1?.model ?? "").includes("gpt-4")) {
-        baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl;
-        authValue = serverConfig.apiKey40 ?? serverConfig.apiKey;
+        baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl ?? "";
+        
+        authValue = serverConfig.apiKey40 ?? serverConfig.apiKey ?? "";
     }
     else {
-        baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl;
-        authValue = serverConfig.apiKey35 ?? serverConfig.apiKey;
+        baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl ?? "";
+        authValue = serverConfig.apiKey35 ?? serverConfig.apiKey ?? "";
     }
 
     if (!baseUrl.startsWith("http")) {
