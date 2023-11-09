@@ -53,10 +53,14 @@ export const getServerSideConfig = () => {
 
   return {
     apiKey: process.env.OPENAI_API_KEY,
+    apiKey35: process.env.OPENAI_API_KEY35,
+    apiKey40: process.env.OPENAI_API_KEY40,
     code: process.env.CODE,
     codes: ACCESS_CODES,
     needCode: ACCESS_CODES.size > 0,
     baseUrl: process.env.BASE_URL,
+    baseUrl35: process.env.BASE_URL35,
+    baseUrl40: process.env.BASE_URL40,
     proxyUrl: process.env.PROXY_URL,
     openaiOrgId: process.env.OPENAI_ORG_ID,
     isVercel: !!process.env.VERCEL,

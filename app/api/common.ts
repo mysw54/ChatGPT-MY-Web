@@ -7,13 +7,25 @@ const serverConfig = getServerSideConfig();
 
 export async function requestOpenai(req: NextRequest) {
   const controller = new AbortController();
-  const authValue = req.headers.get("Authorization") ?? "";
+  //const authValue = req.headers.get("Authorization") ?? "";
   const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
     "/api/openai/",
     "",
   );
-
-  let baseUrl = serverConfig.baseUrl ?? OPENAI_BASE_URL;
+  
+  let baseUrl = serverConfig.baseUrl;
+  let authValue = "";
+  const jsonBody1 = JSON.parse(req.boay);
+  console.log("[get] ", jsonBody1);
+  if ((jsonBody1?.model ?? "").includes("gpt-4")) {
+    baseUrl = serverConfig.baseUrl40 ?? serverConfig.baseUrl;
+    authValue = serverConfig.apiKey40 ?? serverConfig.apiKey;
+  }
+  else {
+    baseUrl = serverConfig.baseUrl35 ?? serverConfig.baseUrl;
+    authValue = serverConfig.apiKey35 ?? serverConfig.apiKey;
+  }
+  baseUrl = baseUrl ?? OPENAI_BASE_URL;
 
   if (!baseUrl.startsWith("http")) {
     baseUrl = `https://${baseUrl}`;

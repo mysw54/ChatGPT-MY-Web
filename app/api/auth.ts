@@ -39,8 +39,9 @@ export function auth(req: NextRequest) {
   console.log("[User IP] ", getIP(req));
   console.log("[Time] ", new Date().toLocaleString());
 
-  if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !token) {
-    return {
+  //if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) && !token) {
+    if (serverConfig.needCode && !serverConfig.codes.has(hashedCode) ) {
+      return {
       error: true,
       msg: !accessCode ? "empty access code" : "wrong access code",
     };
